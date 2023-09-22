@@ -305,7 +305,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
     static bool show_tool_metrics = false;
     static bool show_tool_debug_log = false;
     static bool show_tool_stack_tool = false;
-    static bool show_tool_style_editor = false;
+    static bool show_tool_style_editor = true;
     static bool show_tool_about = false;
 
     if (show_tool_metrics)
@@ -6515,14 +6515,18 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
         if (ImGui::BeginTabItem("Colors"))
         {
             static int output_dest = 0;
-            static bool output_only_modified = true;
+            static bool output_only_modified = false;
             if (ImGui::Button("Export"))
             {
                 if (output_dest == 0)
                     ImGui::LogToClipboard();
                 else
                     ImGui::LogToTTY();
-                ImGui::LogText("ImVec4* colors = ImGui::GetStyle().Colors;" IM_NEWLINE);
+                
+                ImGui::LogText("ImGuiStyle& style = ImGui::GetStyle();" IM_NEWLINE);
+                
+                ImGui::LogText("// Colors" IM_NEWLINE IM_NEWLINE);
+                ImGui::LogText("ImVec4* colors = style.Colors;" IM_NEWLINE);
                 for (int i = 0; i < ImGuiCol_COUNT; i++)
                 {
                     const ImVec4& col = style.Colors[i];
@@ -6533,7 +6537,6 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
                 }
 
                 ImGui::LogText("// Parameters" IM_NEWLINE IM_NEWLINE);
-
                 ImGui::LogText("style.Alpha = %.2ff;" IM_NEWLINE, style.Alpha);
                 ImGui::LogText("style.DisabledAlpha = %.2ff;" IM_NEWLINE, style.DisabledAlpha);
                 ImGui::LogText("style.WindowPadding = ImVec2(%.2ff, %.2ff);" IM_NEWLINE, style.WindowPadding.x, style.WindowPadding.y);
@@ -6580,9 +6583,6 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
                 ImGui::LogText("style.CurveTessellationTol = %.2ff;" IM_NEWLINE, style.CurveTessellationTol);
                 ImGui::LogText("style.CircleTessellationMaxError = %.2ff;" IM_NEWLINE, style.CircleTessellationMaxError);
 
-
-
-                // ============================
                 ImGui::LogFinish();
             }
             ImGui::SameLine(); ImGui::SetNextItemWidth(120); ImGui::Combo("##output_type", &output_dest, "To Clipboard\0To TTY\0");
@@ -6601,7 +6601,7 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
                 "Right-click to open edit options menu.");
 
             ImGui::BeginChild("##colors", ImVec2(0, 0), true, ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_NavFlattened);
-            ImGui::PushItemWidth(-160);
+            ImGui::PushItemWidth(-240);
             for (int i = 0; i < ImGuiCol_COUNT; i++)
             {
                 const char* name = ImGui::GetStyleColorName(i);
@@ -6614,7 +6614,7 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
                     // Tips: in a real user application, you may want to merge and use an icon font into the main font,
                     // so instead of "Save"/"Revert" you'd use icons!
                     // Read the FAQ and docs/FONTS.md about using icon fonts. It's really easy and super convenient!
-                    ImGui::SameLine(0.0f, style.ItemInnerSpacing.x); if (ImGui::Button("Save")) { ref->Colors[i] = style.Colors[i]; }
+//                    ImGui::SameLine(0.0f, style.ItemInnerSpacing.x); if (ImGui::Button("Save")) { ref->Colors[i] = style.Colors[i]; }
                     ImGui::SameLine(0.0f, style.ItemInnerSpacing.x); if (ImGui::Button("Revert")) { style.Colors[i] = ref->Colors[i]; }
                 }
                 ImGui::SameLine(0.0f, style.ItemInnerSpacing.x);
