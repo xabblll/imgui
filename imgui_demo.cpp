@@ -6531,6 +6531,58 @@ void ImGui::ShowStyleEditor(ImGuiStyle* ref)
                         ImGui::LogText("colors[ImGuiCol_%s]%*s= ImVec4(%.2ff, %.2ff, %.2ff, %.2ff);" IM_NEWLINE,
                             name, 23 - (int)strlen(name), "", col.x, col.y, col.z, col.w);
                 }
+
+                ImGui::LogText("// Parameters" IM_NEWLINE IM_NEWLINE);
+
+                ImGui::LogText("style.Alpha = %.2ff;" IM_NEWLINE, style.Alpha);
+                ImGui::LogText("style.DisabledAlpha = %.2ff;" IM_NEWLINE, style.DisabledAlpha);
+                ImGui::LogText("style.WindowPadding = ImVec2(%.2ff, %.2ff);" IM_NEWLINE, style.WindowPadding.x, style.WindowPadding.y);
+                ImGui::LogText("style.WindowRounding = %.2ff;" IM_NEWLINE, style.WindowRounding);
+                ImGui::LogText("style.WindowBorderSize = %.2ff;" IM_NEWLINE, style.WindowBorderSize);
+                ImGui::LogText("style.WindowMinSize = ImVec2(%.2ff, %.2ff);" IM_NEWLINE, style.WindowMinSize.x, style.WindowMinSize.y);
+                ImGui::LogText("style.WindowTitleAlign = ImVec2(%.2ff, %.2ff);" IM_NEWLINE, style.WindowTitleAlign.x, style.WindowTitleAlign.y);
+                ImGui::LogText("style.WindowMenuButtonPosition = %d;" IM_NEWLINE, style.WindowMenuButtonPosition );
+                ImGui::LogText("style.ChildRounding = %.2ff;" IM_NEWLINE, style.ChildRounding);
+                ImGui::LogText("style.ChildBorderSize = %.2ff;" IM_NEWLINE, style.ChildBorderSize);
+                ImGui::LogText("style.PopupRounding = %.2ff;" IM_NEWLINE, style.PopupRounding);
+                ImGui::LogText("style.PopupBorderSize = %.2ff;" IM_NEWLINE, style.PopupBorderSize);
+                ImGui::LogText("style.FramePadding = ImVec2(%.2ff, %.2ff);" IM_NEWLINE, style.FramePadding.x, style.FramePadding.y);
+                ImGui::LogText("style.FrameRounding = %.2ff;" IM_NEWLINE, style.FrameRounding);
+                ImGui::LogText("style.FrameBorderSize = %.2ff;" IM_NEWLINE, style.FrameBorderSize);
+                ImGui::LogText("style.ItemSpacing = ImVec2(%.2ff, %.2ff);" IM_NEWLINE, style.ItemSpacing.x, style.ItemSpacing.y);
+                ImGui::LogText("style.ItemInnerSpacing = ImVec2(%.2ff, %.2ff);" IM_NEWLINE, style.ItemInnerSpacing.x, style.ItemInnerSpacing.y);
+                ImGui::LogText("style.CellPadding = ImVec2(%.2ff, %.2ff);" IM_NEWLINE, style.CellPadding.x, style.CellPadding.y);
+                ImGui::LogText("style.TouchExtraPadding = ImVec2(%.2ff, %.2ff);" IM_NEWLINE, style.TouchExtraPadding.x, style.TouchExtraPadding.y);
+                ImGui::LogText("style.IndentSpacing = %.2ff;" IM_NEWLINE, style.IndentSpacing);
+                ImGui::LogText("style.ColumnsMinSpacing = %.2ff;" IM_NEWLINE, style.ColumnsMinSpacing);
+                ImGui::LogText("style.ScrollbarSize = %.2ff;" IM_NEWLINE, style.ScrollbarSize);
+                ImGui::LogText("style.ScrollbarRounding = %.2ff;" IM_NEWLINE, style.ScrollbarRounding);
+                ImGui::LogText("style.GrabMinSize = %.2ff;" IM_NEWLINE, style.GrabMinSize);
+                ImGui::LogText("style.GrabRounding = %.2ff;" IM_NEWLINE, style.GrabRounding);
+                ImGui::LogText("style.LogSliderDeadzone = %.2ff;" IM_NEWLINE, style.LogSliderDeadzone);
+                ImGui::LogText("style.TabRounding = %.2ff;" IM_NEWLINE, style.TabRounding);
+                ImGui::LogText("style.TabBorderSize = %.2ff;" IM_NEWLINE, style.TabBorderSize);
+                ImGui::LogText("style.TabMinWidthForCloseButton = %.2ff;" IM_NEWLINE, style.TabMinWidthForCloseButton);
+                ImGui::LogText("style.TabBarBorderSize = %.2ff;" IM_NEWLINE, style.TabBarBorderSize);
+                ImGui::LogText("style.ColorButtonPosition = %d;" IM_NEWLINE, style.ColorButtonPosition);
+                ImGui::LogText("style.ButtonTextAlign = ImVec2(%.2ff, %.2ff);" IM_NEWLINE, style.ButtonTextAlign.x, style.ButtonTextAlign.y);
+                ImGui::LogText("style.SelectableTextAlign = ImVec2(%.2ff, %.2ff);" IM_NEWLINE, style.SelectableTextAlign.x, style.SelectableTextAlign.y);
+                ImGui::LogText("style.SeparatorTextBorderSize = %.2ff;" IM_NEWLINE, style.SeparatorTextBorderSize);
+                ImGui::LogText("style.SeparatorTextAlign = ImVec2(%.2ff, %.2ff);" IM_NEWLINE, style.SeparatorTextAlign.x, style.SeparatorTextAlign.y);
+                ImGui::LogText("style.SeparatorTextPadding = ImVec2(%.2ff, %.2ff);" IM_NEWLINE, style.SeparatorTextPadding.x, style.SeparatorTextPadding.y);
+                ImGui::LogText("style.DisplayWindowPadding = ImVec2(%.2ff, %.2ff);" IM_NEWLINE, style.DisplayWindowPadding.x, style.DisplayWindowPadding.y);
+                ImGui::LogText("style.DisplaySafeAreaPadding = ImVec2(%.2ff, %.2ff);" IM_NEWLINE, style.DisplaySafeAreaPadding.x, style.DisplaySafeAreaPadding.y);
+                ImGui::LogText("style.DockingSeparatorSize = %.2ff;" IM_NEWLINE, style.DockingSeparatorSize);
+                ImGui::LogText("style.MouseCursorScale = %.2ff;" IM_NEWLINE, style.MouseCursorScale);
+                ImGui::LogText("style.AntiAliasedLines = %d;" IM_NEWLINE, style.AntiAliasedLines);
+                ImGui::LogText("style.AntiAliasedLinesUseTex = %d;" IM_NEWLINE, style.AntiAliasedLinesUseTex);
+                ImGui::LogText("style.AntiAliasedFill = %d;" IM_NEWLINE, style.AntiAliasedFill);
+                ImGui::LogText("style.CurveTessellationTol = %.2ff;" IM_NEWLINE, style.CurveTessellationTol);
+                ImGui::LogText("style.CircleTessellationMaxError = %.2ff;" IM_NEWLINE, style.CircleTessellationMaxError);
+
+
+
+                // ============================
                 ImGui::LogFinish();
             }
             ImGui::SameLine(); ImGui::SetNextItemWidth(120); ImGui::Combo("##output_type", &output_dest, "To Clipboard\0To TTY\0");
