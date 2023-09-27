@@ -2,8 +2,8 @@ project "ImGui"
 	kind "StaticLib"
 	language "C++"
 
-	targetdir ("Build/" .. outputdir .. "/%{prj.name}")
-	objdir ("Build_Obj/" .. outputdir .. "/%{prj.name}")
+	targetdir ("%{wks.location}/" .. TargetDirBase .. OutputDir .. "%{prj.name}")
+    objdir ("%{wks.location}/" .. ObjDirBase .. OutputDir .. "%{prj.name}")
 
 	files
 	{
@@ -17,13 +17,14 @@ project "ImGui"
 		"imstb_textedit.h",
 		"imstb_truetype.h",
 		"imgui_demo.cpp",
+		"imgui_tables.cpp",
 		
-		"imgui_impl_opengl3.h",
-		"imgui_impl_opengl3_loader.h",
-		"imgui_impl_opengl3.cpp",
+		-- "imgui_impl_opengl3.h",
+		-- "imgui_impl_opengl3_loader.h",
+		-- "imgui_impl_opengl3.cpp",
 		
-		"imgui_impl_sdl3.h",
-		"imgui_impl_sdl3.cpp",
+		-- "imgui_impl_sdl3.h",
+		-- "imgui_impl_sdl3.cpp",
 	}
 
 	filter "system:windows"
@@ -44,3 +45,6 @@ project "ImGui"
 	filter "configurations:Release"
 		runtime "Release"
 		optimize "on"
+		
+    filter { "system:windows", "configurations:Release" }
+        buildoptions "/MT"
