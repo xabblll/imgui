@@ -15782,8 +15782,23 @@ void ImGui::DockContextProcessUndockNode(ImGuiContext* ctx, ImGuiDockNode* node)
     IM_ASSERT(node->IsLeafNode());
     IM_ASSERT(node->Windows.Size >= 1);
 
-    if (node->IsRootNode() || node->IsCentralNode())
+    if (node->IsRootNode())// || node->IsCentralNode())
     {
+        return;
+
+        /*ImGuiWindow* parent = window->ParentWindow;
+        ImGuiWindow* rootWindowDockTree = window->RootWindowDockTree;
+        if (parent && rootWindowDockTree)
+        {
+            ImGuiWindow* grandParent = parent->ParentWindow;
+            IMGUI_DEBUG_LOG_DOCKING("[docking] RootWindowDockTree: '%s', parent: '%s'\n", window->RootWindowDockTree->Name, window->ParentWindow->Name);
+            if (grandParent && (grandParent == rootWindowDockTree) && window->DockNode->TabBar->TabsActiveCount == 1)
+            {
+                IMGUI_DEBUG_LOG_DOCKING("[docking] Preventing undocking!\n", window->RootWindowDockTree->Name, window->ParentWindow->Name);
+                return;
+            }
+        }*/
+
         // In the case of a root node or central node, the node will have to stay in place. Create a new node to receive the payload.
         ImGuiDockNode* new_node = DockContextAddNode(ctx, 0);
         new_node->Pos = node->Pos;
@@ -15793,7 +15808,8 @@ void ImGui::DockContextProcessUndockNode(ImGuiContext* ctx, ImGuiDockNode* node)
         DockSettingsRenameNodeReferences(node->ID, new_node->ID);
         node = new_node;
     }
-    else
+
+    if(!node->IsRootNode())
     {
         // Otherwise extract our node and merge our sibling back into the parent node.
         IM_ASSERT(node->ParentNode->ChildNodes[0] == node || node->ParentNode->ChildNodes[1] == node);
@@ -15803,6 +15819,7 @@ void ImGui::DockContextProcessUndockNode(ImGuiContext* ctx, ImGuiDockNode* node)
         node->ParentNode->AuthorityForViewport = ImGuiDataAuthority_Window; // The node that stays in place keeps the viewport, so our newly dragged out node will create a new viewport
         node->ParentNode = NULL;
     }
+
     for (ImGuiWindow* window : node->Windows)
     {
         window->Flags &= ~ImGuiWindowFlags_ChildWindow;
@@ -16023,7 +16040,7 @@ static void ImGui::DockNodeRemoveWindow(ImGuiDockNode* node, ImGuiWindow* window
             DockNodeRemoveTabBar(node);
     }
 
-    if (node->Windows.Size == 0 /* && !node->IsCentralNode()*/ && !node->IsDockSpace() && window->DockId != node->ID)
+    if (node->Windows.Size == 0 /* && !node->IsCentralNode() && !node->IsDockSpace()*/ && window->DockId != node->ID)
     {
         // Automatic dock node delete themselves if they are not holding at least one tab
         DockContextRemoveNode(&g, node, true);
@@ -16137,7 +16154,7 @@ static void DockNodeFindInfo(ImGuiDockNode* node, ImGuiDockNodeTreeInfo* info)
     }
     if (node->IsCentralNode())
     {
-        IM_ASSERT(info->CentralNode == NULL); // Should be only one
+        //IM_ASSERT(info->CentralNode == NULL); // Should be only one
         //IM_ASSERT(node->IsLeafNode() && "If you get this assert: please submit .ini file + repro of actions leading to this.");
         info->CentralNode = node;
     }
@@ -16195,7 +16212,7 @@ static void ImGui::DockNodeUpdateFlagsAndCollapse(ImGuiDockNode* node)
         if (remove)
         {
             window->DockTabWantClose = false;
-            if (node->Windows.Size == 1 && !node->IsCentralNode())
+            if (node->Windows.Size == 1)// && !node->IsCentralNode())
             {
                 DockNodeHideHostWindow(node);
                 node->State = ImGuiDockNodeState_HostWindowHiddenBecauseSingleWindow;
