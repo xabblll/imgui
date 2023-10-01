@@ -15746,6 +15746,23 @@ void ImGui::DockContextProcessUndockWindow(ImGuiContext* ctx, ImGuiWindow* windo
 {
     ImGuiContext& g = *ctx;
     IMGUI_DEBUG_LOG_DOCKING("[docking] DockContextProcessUndockWindow window '%s', clear_persistent_docking_ref = %d\n", window->Name, clear_persistent_docking_ref);
+
+    if(window->DockNode && window->DockNode->IsRootNode())
+    {
+        ImGuiWindow* parent = window->ParentWindow;
+        ImGuiWindow* rootWindowDockTree = window->RootWindowDockTree;
+        if (parent && rootWindowDockTree)
+        {
+            ImGuiWindow* grandParent = parent->ParentWindow;
+            IMGUI_DEBUG_LOG_DOCKING("[docking] RootWindowDockTree: '%s', parent: '%s'\n", window->RootWindowDockTree->Name, window->ParentWindow->Name);
+            if (grandParent && (grandParent == rootWindowDockTree) && window->DockNode->TabBar->TabsActiveCount == 1)
+            {
+                IMGUI_DEBUG_LOG_DOCKING("[docking] Preventing undocking!\n", window->RootWindowDockTree->Name, window->ParentWindow->Name);
+                return;
+            }
+        }
+    }
+
     if (window->DockNode)
         DockNodeRemoveWindow(window->DockNode, window, clear_persistent_docking_ref ? 0 : window->DockId);
     else
@@ -15957,6 +15974,7 @@ static void ImGui::DockNodeAddWindow(ImGuiDockNode* node, ImGuiWindow* window, b
 static void ImGui::DockNodeRemoveWindow(ImGuiDockNode* node, ImGuiWindow* window, ImGuiID save_dock_id)
 {
     ImGuiContext& g = *GImGui;
+
     IM_ASSERT(window->DockNode == node);
     //IM_ASSERT(window->RootWindowDockTree == node->HostWindow);
     //IM_ASSERT(window->LastFrameActive < g.FrameCount);    // We may call this from Begin()
@@ -16005,7 +16023,7 @@ static void ImGui::DockNodeRemoveWindow(ImGuiDockNode* node, ImGuiWindow* window
             DockNodeRemoveTabBar(node);
     }
 
-    if (node->Windows.Size == 0 && !node->IsCentralNode() && !node->IsDockSpace() && window->DockId != node->ID)
+    if (node->Windows.Size == 0 /* && !node->IsCentralNode()*/ && !node->IsDockSpace() && window->DockId != node->ID)
     {
         // Automatic dock node delete themselves if they are not holding at least one tab
         DockContextRemoveNode(&g, node, true);
@@ -16120,7 +16138,7 @@ static void DockNodeFindInfo(ImGuiDockNode* node, ImGuiDockNodeTreeInfo* info)
     if (node->IsCentralNode())
     {
         IM_ASSERT(info->CentralNode == NULL); // Should be only one
-        IM_ASSERT(node->IsLeafNode() && "If you get this assert: please submit .ini file + repro of actions leading to this.");
+        //IM_ASSERT(node->IsLeafNode() && "If you get this assert: please submit .ini file + repro of actions leading to this.");
         info->CentralNode = node;
     }
     if (info->CountNodesWithWindows > 1 && info->CentralNode != NULL)
@@ -17903,6 +17921,13 @@ ImGuiID ImGui::DockSpace(ImGuiID id, const ImVec2& size_arg, ImGuiDockNodeFlags 
 // The limitation with this call is that your window won't have a menu bar.
 // Even though we could pass window flags, it would also require the user to be able to call BeginMenuBar() somehow meaning we can't Begin/End in a single function.
 // But you can also use BeginMainMenuBar(). If you really want a menu bar inside the same window as the one hosting the dockspace, you will need to copy this code somewhere and tweak it.
+/**
+ * \brief 
+ * \param a 
+ * \param a 
+ * \param a 
+ * \return a
+ */
 ImGuiID ImGui::DockSpaceOverViewport(const ImGuiViewport* viewport, ImGuiDockNodeFlags dockspace_flags, const ImGuiWindowClass* window_class)
 {
     if (viewport == NULL)
