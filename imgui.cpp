@@ -8184,7 +8184,13 @@ void ImGui::SetNextWindowFocus()
 void ImGui::SetNextWindowBgAlpha(float alpha)
 {
     ImGuiContext& g = *GImGui;
-    g.NextWindowData.Flags |= ImGuiNextWindowDataFlags_HasBgAlpha;
+    if(alpha != 0.0f)
+    {
+        g.NextWindowData.Flags |= ImGuiNextWindowDataFlags_HasBgAlpha;
+    }
+    else
+        g.NextWindowData.Flags &= ~ImGuiNextWindowDataFlags_HasBgAlpha;
+
     g.NextWindowData.BgAlphaVal = alpha;
 }
 
@@ -14858,7 +14864,7 @@ void ImGui::RenderPlatformWindowsDefault(void* platform_render_arg, void* render
         ImGuiViewport* viewport = platform_io.Viewports[i];
         if (viewport->Flags & ImGuiViewportFlags_IsMinimized)
             continue;
-        if (platform_io.Platform_RenderWindow) platform_io.Platform_RenderWindow(viewport, platform_render_arg);
+        if (platform_io.Platform_RenderWindow) platform_io.Platform_RenderWindow(viewport, platform_render_arg); // GL Make Current
         if (platform_io.Renderer_RenderWindow) platform_io.Renderer_RenderWindow(viewport, renderer_render_arg);
     }
     for (int i = 1; i < platform_io.Viewports.Size; i++)
@@ -16492,6 +16498,8 @@ static void ImGui::DockNodeUpdate(ImGuiDockNode* node)
             window_flags |= ImGuiWindowFlags_NoFocusOnAppearing;
             window_flags |= ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoCollapse;
             window_flags |= ImGuiWindowFlags_NoTitleBar;
+
+            window_flags |= ImGuiWindowFlags_NoBackground;
 
             SetNextWindowBgAlpha(0.0f); // Don't set ImGuiWindowFlags_NoBackground because it disables borders
             PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -18853,7 +18861,7 @@ static void DockSettingsHandler_DockNodeToSettings(ImGuiDockContext* dc, ImGuiDo
     node_settings.SelectedTabId = node->SelectedTabId;
     node_settings.SplitAxis = (signed char)(node->IsSplitNode() ? node->SplitAxis : ImGuiAxis_None);
     node_settings.Depth = (char)depth;
-    node_settings.Flags = (node->LocalFlags & ImGuiDockNodeFlags_SavedFlagsMask_);
+    node_settings.Flags = (node->LocalFlags & ImGuiDockNodeFlags_SavedFlagsMask_);// |/*SOLITUDE*/ ImGuiDockNodeFlags_CentralNode);
     node_settings.Pos = ImVec2ih(node->Pos);
     node_settings.Size = ImVec2ih(node->Size);
     node_settings.SizeRef = ImVec2ih(node->SizeRef);
@@ -18906,8 +18914,11 @@ static void ImGui::DockSettingsHandler_WriteAll(ImGuiContext* ctx, ImGuiSettings
             buf->appendf(" Split=%c", (node_settings->SplitAxis == ImGuiAxis_X) ? 'X' : 'Y');
         if (node_settings->Flags & ImGuiDockNodeFlags_NoResize)
             buf->appendf(" NoResize=1");
+
+        // SOLITUDE HACK
         if (node_settings->Flags & ImGuiDockNodeFlags_CentralNode)
             buf->appendf(" CentralNode=1");
+
         if (node_settings->Flags & ImGuiDockNodeFlags_NoTabBar)
             buf->appendf(" NoTabBar=1");
         if (node_settings->Flags & ImGuiDockNodeFlags_HiddenTabBar)
