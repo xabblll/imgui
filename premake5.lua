@@ -18,6 +18,8 @@ project "ImGui"
 		"imstb_truetype.h",
 		"imgui_demo.cpp",
 		"imgui_tables.cpp",
+		"imgui_stdlib.cpp",
+		"imgui_stdlib.h",
 		
 		-- "imgui_impl_opengl3.h",
 		-- "imgui_impl_opengl3_loader.h",
