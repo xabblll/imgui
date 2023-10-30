@@ -2556,6 +2556,45 @@ bool ImGui::DragFloat4(const char* label, float v[4], float v_speed, float v_min
     return DragScalarN(label, ImGuiDataType_Float, v, 4, v_speed, &v_min, &v_max, format, flags);
 }
 
+bool ImGui::DragVector3(const char* label, void* v, const char* format, ImGuiSliderFlags flags)
+{
+    ImGuiWindow* window = GetCurrentWindow();
+    if (window->SkipItems)
+        return false;
+
+    ImGuiContext& g = *GImGui;
+    bool value_changed = false;
+    BeginGroup();
+    PushID(label);
+    PushMultiItemsWidths(3, CalcItemWidth());
+    size_t type_size = GDataTypeInfo[ImGuiDataType_Float].Size;
+    const char* names[] = {"x", "y", "z"};
+    float min = 0.0f;
+    float max = 0.0f;
+    for (int i = 0; i < 3; i++)
+    {
+        PushID(i);
+        if (i > 0)
+            SameLine(0, g.Style.ItemInnerSpacing.x);
+        //names[i]
+        value_changed |= DragScalar(names[i], ImGuiDataType_Float, v, 0.05f, &min, &max, format, flags);
+        PopID();
+        PopItemWidth();
+        v = (void*)((char*)v + type_size);
+    }
+    PopID();
+
+    const char* label_end = FindRenderedTextEnd(label);
+    if (label != label_end)
+    {
+        SameLine(0, g.Style.ItemInnerSpacing.x);
+        TextEx(label, label_end);
+    }
+
+    EndGroup();
+    return value_changed;
+}
+
 // NB: You likely want to specify the ImGuiSliderFlags_AlwaysClamp when using this.
 bool ImGui::DragFloatRange2(const char* label, float* v_current_min, float* v_current_max, float v_speed, float v_min, float v_max, const char* format, const char* format_max, ImGuiSliderFlags flags)
 {
