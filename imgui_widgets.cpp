@@ -1443,8 +1443,9 @@ void ImGui::SeparatorEx(ImGuiSeparatorFlags flags, float thickness)
 
         // We don't provide our width to the layout so that it doesn't get feed back into AutoFit
         // FIXME: This prevents ->CursorMaxPos based bounding box evaluation from working (e.g. TableEndCell)
-        const float thickness_for_layout = (thickness == 1.0f) ? 0.0f : thickness; // FIXME: See 1.70/1.71 Separator() change: makes legacy 1-px separator not affect layout yet. Should change.
-        const ImRect bb(ImVec2(x1, window->DC.CursorPos.y), ImVec2(x2, window->DC.CursorPos.y + thickness));
+        const float thickness_for_layout = ((thickness == 1.0f) ? 0.0f : thickness) + 16.0f; // FIXME: See 1.70/1.71 Separator() change: makes legacy 1-px separator not affect layout yet. Should change.
+        const float heightOffset = thickness_for_layout * 0.5 - thickness * 0.5f;
+        const ImRect bb(ImVec2(x1, window->DC.CursorPos.y + heightOffset), ImVec2(x2, window->DC.CursorPos.y + thickness + heightOffset));
         ItemSize(ImVec2(0.0f, thickness_for_layout));
 
         if (ItemAdd(bb, 0))
@@ -1470,11 +1471,14 @@ void ImGui::Separator()
     if (window->SkipItems)
         return;
 
+    //ItemSize(ImVec2(0,4));
     // Those flags should eventually be configurable by the user
     // FIXME: We cannot g.Style.SeparatorTextBorderSize for thickness as it relates to SeparatorText() which is a decorated separator, not defaulting to 1.0f.
     ImGuiSeparatorFlags flags = (window->DC.LayoutType == ImGuiLayoutType_Horizontal) ? ImGuiSeparatorFlags_Vertical : ImGuiSeparatorFlags_Horizontal;
     flags |= ImGuiSeparatorFlags_SpanAllColumns; // NB: this only applies to legacy Columns() api as they relied on Separator() a lot.
     SeparatorEx(flags, 1.0f);
+
+    //ItemSize(ImVec2(0,4));
 }
 
 void ImGui::SeparatorTextEx(ImGuiID id, const char* label, const char* label_end, float extra_w)
