@@ -1444,7 +1444,7 @@ void ImGui::SeparatorEx(ImGuiSeparatorFlags flags, float thickness)
         // We don't provide our width to the layout so that it doesn't get feed back into AutoFit
         // FIXME: This prevents ->CursorMaxPos based bounding box evaluation from working (e.g. TableEndCell)
         const float thickness_for_layout = ((thickness == 1.0f) ? 0.0f : thickness) + 16.0f; // FIXME: See 1.70/1.71 Separator() change: makes legacy 1-px separator not affect layout yet. Should change.
-        const float heightOffset = thickness_for_layout * 0.5 - thickness * 0.5f;
+        const float heightOffset = thickness_for_layout * 0.5f - thickness * 0.5f;
         const ImRect bb(ImVec2(x1, window->DC.CursorPos.y + heightOffset), ImVec2(x2, window->DC.CursorPos.y + thickness + heightOffset));
         ItemSize(ImVec2(0.0f, thickness_for_layout));
 

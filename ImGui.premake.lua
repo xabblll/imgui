@@ -1,7 +1,8 @@
 project "ImGui"
 	kind "StaticLib"
 	language "C++"
-
+	staticruntime "On"
+	
 	targetdir ("%{wks.location}/" .. TargetDirBase .. OutputDir .. "%{prj.name}")
     objdir ("%{wks.location}/" .. ObjDirBase .. OutputDir .. "%{prj.name}")
 
@@ -20,24 +21,15 @@ project "ImGui"
 		"imgui_tables.cpp",
 		"imgui_stdlib.cpp",
 		"imgui_stdlib.h",
-		
-		-- "imgui_impl_opengl3.h",
-		-- "imgui_impl_opengl3_loader.h",
-		-- "imgui_impl_opengl3.cpp",
-		
-		-- "imgui_impl_sdl3.h",
-		-- "imgui_impl_sdl3.cpp",
 	}
 
 	filter "system:windows"
 		systemversion "latest"
-		cppdialect "C++17"
 		staticruntime "On"
 
 	filter "system:linux"
 		pic "On"
 		systemversion "latest"
-		cppdialect "C++17"
 		staticruntime "On"
 
 	filter "configurations:Debug"
